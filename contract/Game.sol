@@ -40,9 +40,10 @@ contract Game{
     
     mapping(address => uint256) allowed;
     mapping(address => bool) is_signup;
+    mapping(uint256 => address) blocked_tokens;
     address public manager;
     address public owner;
-    mapping(uint256 => address) blocked_tokens;
+    
     
     
     uint256 public value;
@@ -76,22 +77,22 @@ contract Game{
     
     
     //assuming 0: rock , 1: paper , 2:scissor
-    function signup() public payable returns(bool){
-        require(is_signup[msg.sender]==false);
-        is_signup[msg.sender] = true;
+    function signup(address player) public payable returns(bool){
+        require(is_signup[player]==false);
+        is_signup[player] = true;
         
         for(uint256 stones=0; stones< NoOfTokens; stones++){
-          nft.createToken(msg.sender, 1 ,value);  
+          nft.createToken(player, 1 ,value);  
         }
         
         for(uint256 paper =0;  paper < NoOfTokens; paper++){
-          nft.createToken(msg.sender, 2 ,value);            
+          nft.createToken(player, 2 ,value);            
         }
         for(uint256 scissor = 0; scissor< NoOfTokens ; scissor++){
-          nft.createToken(msg.sender, 3 ,value);  
+          nft.createToken(player, 3 ,value);  
         }
         
-      return  stars.transfer( msg.sender ,starCount);
+      return  stars.transfer(player ,starCount);
     
     }
     
