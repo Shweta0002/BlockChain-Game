@@ -40,10 +40,9 @@ contract Game{
     
     mapping(address => uint256) allowed;
     mapping(address => bool) is_signup;
-    mapping(uint256 => address) blocked_tokens;
     address public manager;
     address public owner;
-    
+    mapping(uint256 => address) blocked_tokens;
     
     
     uint256 public value;
@@ -92,13 +91,13 @@ contract Game{
           nft.createToken(player, 3 ,value);  
         }
         
-      return  stars.transfer(player ,starCount);
+      return  stars.transfer( player ,starCount);
     
     }
     
     function play_game(address player1 , address player2 , uint256 token1 , uint256 token2) public payable   returns(uint256){
-        block_card(player1 , 1);
-        block_card(player2,1);
+        block_stars(player1 , 1);
+        block_stars(player2,1);
          require(player1 == nft.ownerOf(token1) && player2 ==nft.ownerOf(token2));
          uint256 card1 ;
          uint256 card2;
@@ -146,9 +145,9 @@ contract Game{
         
     }
     
-    function block_card(address _of , uint256 cards) public{
+    function block_stars(address _of , uint256 _count) public{
         require(stars.balanceOf(_of)>=1);
-        stars.transferFrom(_of , manager , cards);
+        stars.transferFrom(_of , manager , _count);
         
     
         
@@ -157,7 +156,7 @@ contract Game{
  
    
     function cardDetails(address user , uint256 tokenId) public  returns(uint256 , uint256){
-        require(user == nft.ownerOf(tokenId), "Invalid Token");
+        require(user == nft.ownerOf(tokenId));
          uint256 cardType ;
          uint256 valueOfCard;
          (cardType,valueOfCard) = nft.tokenDetails(tokenId);
