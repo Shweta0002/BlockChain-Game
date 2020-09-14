@@ -16,6 +16,7 @@ interface NFT{
     function tokenDetails(uint256) external returns(uint256,uint256);
     function returnTokenCount(address , uint256 , bool) external returns(uint256);
     function burn(address , uint256) external payable ;
+    function safeTransferFrom(address , address , uint256) external payable ;
 }
 
 
@@ -41,6 +42,7 @@ contract Game{
     mapping(address => bool) is_signup;
     address public manager;
     address public owner;
+    mapping(uint256 => address) blocked_tokens;
     
     
     uint256 public value;
@@ -150,10 +152,29 @@ contract Game{
     
         
     }
-    function approve(address spender , uint256 _value) public {
-        stars.approve(spender , _value);
-    }
+ 
+ 
    
+    function cardDetails(address user , uint256 tokenId) public  returns(uint256 , uint256){
+        require(user == nft.ownerOf(tokenId), "Invalid Token");
+         uint256 cardType ;
+         uint256 valueOfCard;
+         (cardType,valueOfCard) = nft.tokenDetails(tokenId);
+         blocked_tokens[tokenId]=user;
+         return (cardType,valueOfCard);
+
+    }
+    
+    function clearTokens(uint256 tokenID1 , uint256 tokenID2 , bool status) public payable {
+        if(!status){
+           uint256 tokenToReturn;
+           tokenID1== 0 ? tokenToReturn=tokenID2 : tokenToReturn = tokenID1;
+           nft.safeTransferFrom(manager , blocked_tokens[tokenToReturn] , tokenToReturn);
+           
+        }
+        delete(blocked_tokens[tokenID1]);
+        delete(blocked_tokens[tokenID2]);
+    }
     
   
     
