@@ -116,7 +116,7 @@ async function setNftAddress(_nftAddress , account , privateKey , deployedAddres
         }
         
 }
-async function setERC20Contractaddress(starContract_address , account , privateKey , deployedAddress){
+async function setERC20Contractaddress(starContract_address ,  account , privateKey , deployedAddress){
         try{
                 var data = _interface.methods.set_token_address(starContract_address).encodeABI();
                 run_code(data , account , privateKey , deployedAddress);
@@ -166,7 +166,7 @@ async function setToken(_amount , account , privateKey , deployedAddress){
 }
 async function signUP(player , account , privateKey , deployedAddress){
         try{
-                var data = await _interface.methods.signUp(player).encodeABI(); 
+                var data = await _interface.methods.signup(player).encodeABI(); 
                 run_code(data , account , privateKey , deployedAddress); 
         }
         catch{
@@ -335,6 +335,6 @@ async function tokenCreate(){
 //setstars(10);
 //settoken(3);
 //setvalue(40);
-signUP('0xF7C17c02428CcC44a35725DfDe473cCA2c4393ff');
+signUP(account3 , account3 , privateKey3 , gameContractAddress);
 
 
