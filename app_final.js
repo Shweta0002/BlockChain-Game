@@ -116,7 +116,7 @@ async function setNftAddress(_nftAddress , account , privateKey , deployedAddres
         }
         
 }
-async function setERC20Contractaddress(starContract_address , , account , privateKey , deployedAddress){
+async function setERC20Contractaddress(starContract_address , account , privateKey , deployedAddress){
         try{
                 var data = _interface.methods.set_token_address(starContract_address).encodeABI();
                 run_code(data , account , privateKey , deployedAddress);
@@ -126,7 +126,7 @@ async function setERC20Contractaddress(starContract_address , , account , privat
         }
          
 }
-async function setOwner(owner_address , , account , privateKey , deployedAddress){
+async function setOwner(owner_address , account , privateKey , deployedAddress){
         try{
                 var data = _interface.methods.setOwner(owner_address).encodeABI();
                 run_code(data , account , privateKey , deployedAddress);
