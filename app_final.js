@@ -516,7 +516,7 @@ async function runCode(data , account , privateKey,  deployedAddress){
 
 
 //////////////////////////////////////////////////////////////////////////////interact with game functions //////////////////////////////////////////
-async function setNftAddress(_nftAddress , account , privateKey , deployedAddress){
+async function setNftAddress(_nftAddress , account , privateKey , deployedAddress){    ///function to link nft with game contract ///not to be used, it's already set
         try{
                 var data = _interface.methods.set_nft_address(_nftAddress).encodeABI();
                 runCode(data , account , privateKey , deployedAddress);
@@ -526,7 +526,7 @@ async function setNftAddress(_nftAddress , account , privateKey , deployedAddres
         }
         
 }
-async function setERC20Contractaddress(starContract_address ,  account , privateKey , deployedAddress){
+async function setERC20Contractaddress(starContract_address ,  account , privateKey , deployedAddress){ ///function to link stars conttract with game contract //not to be used , already set
         try{
                 var data = _interface.methods.set_token_address(starContract_address).encodeABI();
                 runCode(data , account , privateKey , deployedAddress);
@@ -536,7 +536,7 @@ async function setERC20Contractaddress(starContract_address ,  account , private
         }
          
 }
-async function setOwner(owner_address , account , privateKey , deployedAddress){
+async function setOwner(owner_address , account , privateKey , deployedAddress){ /////function to set the owner of the game contract , not to be used already set
         try{
                 var data = _interface.methods.setOwner(owner_address).encodeABI();
                 runCode(data , account , privateKey , deployedAddress);
@@ -545,7 +545,7 @@ async function setOwner(owner_address , account , privateKey , deployedAddress){
                 throw{message: "ERROR: cann't set owner address"};
         }
 }
-async function setStars(_stars ,account , privateKey , deployedAddress ){
+async function setStars(_stars ,account , privateKey , deployedAddress ){ //////set initial stars to be  given to player, not to be used already set
         try{
                 var data = _interface.methods.setStars(_stars).encodeABI();
                 runCode(data , account , privateKey , deployedAddress);
@@ -554,7 +554,7 @@ async function setStars(_stars ,account , privateKey , deployedAddress ){
                 throw{message: "ERROR: cann't set star ammount"};
         }        
 }
-async function setValue(_value , account , privateKey , deployedAddress){
+async function setValue(_value , account , privateKey , deployedAddress){///////set initial card value to be supplied to player , already set not to be used
         try{
                 var data = _interface.methods.setValue(_value).encodeABI();
                 runCode(data , account , privateKey , deployedAddress);
@@ -564,7 +564,7 @@ async function setValue(_value , account , privateKey , deployedAddress){
         }
         
 }
-async function setToken(_amount , account , privateKey , deployedAddress){
+async function setToken(_amount , account , privateKey , deployedAddress){   ////set token count (supply_ not be used already set)
         try{
                 var data = await _interface.methods.setToken(_amount).encodeABI();
                 runCode(data , account , privateKey , deployedAddress);
@@ -573,38 +573,16 @@ async function setToken(_amount , account , privateKey , deployedAddress){
                 throw{message: "ERROR: cann't set token ammount"};
         }
 }
-async function signUP(player , account , privateKey , deployedAddress){
-        try{
+async function signUP(player , account , privateKey , deployedAddress){ //// takes 4 argumets for signup , account of player  
+        try{																//// , account, private key to be used for transaction and game contract addresss
                 var data = await _interface.methods.signUp(player).encodeABI(); 
                 runCode(data , account , privateKey , deployedAddress); 
         }
         catch{
                 throw{message: "ERROR: cann't signup"};
         }
-}
-
-
-async function playGame( player1 ,player2 , token1 , token2  , account , privateKey , deployedAddress){
-        try{
-                var data = await _interface.methods.play_game( player1, player2, token1 , token2).encodeABI();
-                return runCode(data , account , privateKey , deployedAddress);
-        }
-        catch{
-                throw{message: "ERROR: unable to process game"};
-        }
-
-}
-async function clearTokens(token1 , token2 , status , account , privateKey , deployedAddress){
-        try{
-                var data = await _interface.methods.clearTokens( token1, token2, status).encodeABI();
-                return runCode(data , account , privateKey , deployedAddress);
-        }
-        catch{
-                throw{message: "ERROR: unable to clear tokens"};
-        }
-
-}
-async function totalCards( _of ){
+}									
+async function totalCards( _of ){ //// argument : address returns : total cards given account address is holding
         try{
                 var data = await _interface.methods.TotalCards(_of).call();
                 //run_code(data);
@@ -615,19 +593,8 @@ async function totalCards( _of ){
                 throw{message: "ERROR: cann't show total cards this account is holding"};
         }
 }
-async function cardDetails(player , tokenId ,  account , privateKey , deployedAddress){
-        try{
-                var data= await _interface.methods.cardDetails(player , tokenId).encodeABI();
-				runCode(data , account , privateKey , deployedAddress);
-				console.log(data);
-                return data;
-        }
-        catch{
-                throw{message: "token doesn't exist"};
 
-        }
-}
-async function showStars(_of){   //
+async function showStars(_of){   //  argument: address returns : total stars given account is holding
         try{
                 var data = await _interface.methods.showStars(_of).call(); 
                 //run_code(data);
@@ -638,7 +605,7 @@ async function showStars(_of){   //
                 throw{message: "ERROR: cann't show how many stars this address is holding "};
         }
 }
-async function remainingRock(_of){
+async function remainingRock(_of){/////argument : address   returns: total rock cards of account
         try{
                 var data= await _interface.methods.remainingRock(player);
                 console.log(data);
@@ -650,7 +617,7 @@ async function remainingRock(_of){
         }   
 
 }
-async function remainingPaper(_of){
+async function remainingPaper(_of){//////argumets : address    returns: totak paper cards of account
         try{
                 var data= await _interface.methods.remainingPaper(player);
                 console.log(data);
@@ -663,7 +630,7 @@ async function remainingPaper(_of){
 
 }
 
-async function remainingScissor(_of){
+async function remainingScissor(_of){ //////arguments: address  return: total scissor cards account is holding
         try{
                 var data= await _interface.methods.remainingScissor(player);
                 console.log(data);
@@ -679,27 +646,8 @@ async function remainingScissor(_of){
 
 
 ///////////////////////////////////////////////////////////////////nft functions//////////////////////////////////////////////////////////
-async function setGameContractAddress (_address , account , privateKey , deployedAddress){
-        try{
-                let gameAddress = await _interact.methods.setGameContractAddress(_address).encodeABI();
-                runCode(gameAddress , account , privateKey , deployedAddress);
-        }
-        catch(e){
-                throw{ message : "Contract not set"};
-        }
-      }
-      
-      async function tokenCreate(_address, tokenType, tokenValue , account , privateKey , deployedAddress){
-          try{
-                let creation = await _interact.methods.createToken (_address, tokenType, tokenValue , account , privateKey , deployedAddress).encodeABI();
-                runCode(creation);
-          }
-          catch (e){
-                throw{ message : "Token not created"};
-          }
-       }
-       
-      async function remove(tokenId , account , privateKey , deployedAddress){
+     
+      async function burn(tokenId , account , privateKey , deployedAddress){  ///burns the card , and card will no longer be accessible 
          try{
                  let cardDelete = await _interact.methods.burn(tokenId).encodeABI();
                 runCode(cardDelete , account , privateKey , deployedAddress);
@@ -709,7 +657,7 @@ async function setGameContractAddress (_address , account , privateKey , deploye
           }
        }
        
-       async function details(tokeId){
+       async function details(tokeId){ ////argument : tokenID   returns: card type ie rock . paper or scissor and card value
         try{
                 var cardType;
                 cardType = await _interact.methods.tokenDetails(tokeId).call();
@@ -723,7 +671,7 @@ async function setGameContractAddress (_address , account , privateKey , deploye
         }
       }
       
-      async function returnOwnedToken(_address){
+      async function returnOwnedToken(_address){ //// argument : address   returns : array of Ids given account address is holding
         try{
                 let tokenList = await _interact.methods.returnOwnedToken(_address).call();
                 console.log(tokenList);
@@ -734,19 +682,8 @@ async function setGameContractAddress (_address , account , privateKey , deploye
         }
       }
       
-      async function tokenCount(_address, tokenId, isTotalCard){
-        //isTotalCard is a bool value
-         try{
-                let count = await _interact.methods.returnTokenCount(_address, tokenId, isTotalCard).call();
-                //transaction(trx);
-                return count;
-         }
-         catch(e){
-                 throw{ message : "Token count not return"};
-         }
-       }
-       
-       async function owner(tokeId){
+   
+       async function ownerOf(tokeId){////argument : tokenId    returns: account address of the owner of given tokenID
          try{
                 let cardOwner = await _interact.methods.ownerOf(tokeId).call();
 				//transaction(trx);
@@ -758,7 +695,7 @@ async function setGameContractAddress (_address , account , privateKey , deploye
          }
       }
       
-      async function transfer(_address,tokeId , account , privateKey , deployedAddress){
+      async function transfer(_address,tokeId , account , privateKey , deployedAddress){/////trasnfer token from self to other account
         try{
                 let transfer = await _interact.methods.transfer(_address,tokeId).encodeABI();
                 runCode(transfer , account , privateKey , deployedAddress);
@@ -768,7 +705,7 @@ async function setGameContractAddress (_address , account , privateKey , deploye
         }
       }
       
-      async function safeTransferFrom(_address, __address, tokenId , account , privateKey , deployedAddress){
+      async function safeTransferFrom(_address, __address, tokenId , account , privateKey , deployedAddress){/////transfer token from other account to someone else account // requires approval
         try{
                 let transfer = await _interact.methods.safeTransferFrom(_address, __address, tokenId).encodeABI();
                 runCode(transfer , account , privateKey , deployedAddress);
@@ -778,15 +715,8 @@ async function setGameContractAddress (_address , account , privateKey , deploye
         }
       }    
 ///////////////////////////////////////////////////////////stars contract functions/////////////////////////////////
-async function ChangeOwner(newOwner , account , privateKey , deployedAddress){
-	try{
-                var ownerChange= await star.methods.changeowner(newOwner).encodeABI();
-                runCode(ownerChange, account , privateKey , deployedAddress); 
-        }catch(err){
-	        throw{message : "ERROR : Owner not changed"};
-        }
-}
-async function Transfer(_to,value, account , privateKey , deployedAddress){
+
+async function Transfer(_to,value, account , privateKey , deployedAddress){ ///transfer stars from self to other
 	try{
                 var data = await star.methods.transfer(_to,value).encodeABI();
                 runCode(data1 , account , privateKey , deployedAddress);
@@ -794,15 +724,8 @@ async function Transfer(_to,value, account , privateKey , deployedAddress){
 	        throw{ message : "ERROR : Token not transferred using transfer"};
 }
 }
-async function Approve(_spender,value , account , privateKey , deployedAddress){
-	try{
-                var approved = await star.methods.approve(_spender,100).encodeABI();
-                runCode(approved , account , privateKey , deployedAddress);
-        }catch(err){
-                throw{ message : "ERROR : Not approved"};
-        }
-}
-async function TransferFrom(_from,_to,value , account , privateKey , deployedAddress){
+
+async function TransferFrom(_from,_to,value , account , privateKey , deployedAddress){////transfer stars from other to someone else account ///approval needed 
         try{
                  var Transferred = await star.methods.transferFrom(_from,_to,value).encodeABI();
                 runCode(Transferred , account , privateKey , deployedAddress);
@@ -811,23 +734,8 @@ async function TransferFrom(_from,_to,value , account , privateKey , deployedAdd
                 throw{ message : "ERROR : Token not transferred using transferFrom"};
         }
 }
-async function increaseSupply(value , account , privateKey , deployedAddress){
-	try{
-                var increasedSupply= await star.methods.IncreaseSupply(value).encodeABI();
-                runCode(increasedSupply , account , privateKey , deployedAddress);
-        }catch(err){
-                throw{ message : "ERROR : Supply not increased"};
-        }
-}
-async function decreaseSupply(value , account , privateKey , deployedAddress ){
-	try{
-                var _supply= await star.methods.DecreaseSupply(value).encodeABI();
-                runCode(_supply , account , privateKey , deployedAddress);
-        }catch(err){
-                throw{ message : "ERROR : Supply not decreased"};
-        }
-}
-async function getbalance(_address){
+
+async function getbalance(_address){ //// argument: address returns : total stars account is holding
 	try{
                 balance = await star.methods.balanceOf(_address).call();
                 console.log(balance);
@@ -846,11 +754,11 @@ async function getbalance(_address){
 //setStars(10 , account1 , privateKey1 , gameContractAddress);
 //setToken(3 , account1 , privateKey1 , gameContractAddress);
 //setValue(40 , account1 , privateKey1 , gameContractAddress);
-//signUP('0xD242b543d61b707162D3A18Cc44160050f23318C' , account1 , privateKey1 , gameContractAddress);
+signUP('0x5e281d6b288b57613F206bc94d036E7D16a732F9' , account1 , privateKey1 , gameContractAddress);
 //showStars(account1 , account1 , privateKey1  , gameContractAddress);
 //totalCards(account1 , account1 , privateKey1 , gameContractAddress);
 
-returnOwnedToken('0xD242b543d61b707162D3A18Cc44160050f23318C' , account1 , privateKey1 , nftContractAddress);
+//returnOwnedToken('0xD242b543d61b707162D3A18Cc44160050f23318C' , account1 , privateKey1 , nftContractAddress);
 //cardDetails(account1 , 5  , account1 , privateKey1  , gameContractAddress);
 //details(5 , account1 , privateKey1 , nftContractAddress);
 //transfer(gameContractAddress, 5 , account1 , privateKey1 , nftContractAddress);
