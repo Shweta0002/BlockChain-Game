@@ -480,7 +480,7 @@ const privateKey4 = new Buffer.from('7958cb545ad3be8ad142a8f632c7c7cc5c8bc18bdd0
 async function runCode(data , account , privateKey,  deployedAddress){
         
         var count = await web3.eth.getTransactionCount(account); 
-
+		console.log(count);
         var Price =  await web3.eth.getGasPrice();
         
        
@@ -519,7 +519,7 @@ async function runCode(data , account , privateKey,  deployedAddress){
 async function setNftAddress(_nftAddress , account , privateKey , deployedAddress){    ///function to link nft with game contract ///not to be used, it's already set
         try{
                 var data = _interface.methods.set_nft_address(_nftAddress).encodeABI();
-                runCode(data , account , privateKey , deployedAddress);
+                await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
                 throw{message: "ERROR: cann't set nft contract address"};
@@ -529,26 +529,18 @@ async function setNftAddress(_nftAddress , account , privateKey , deployedAddres
 async function setERC20Contractaddress(starContract_address ,  account , privateKey , deployedAddress){ ///function to link stars conttract with game contract //not to be used , already set
         try{
                 var data = _interface.methods.set_token_address(starContract_address).encodeABI();
-                runCode(data , account , privateKey , deployedAddress);
+                await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
                 throw{message: "ERROR: cann't set token contract address"};
         }
          
 }
-async function setOwner(owner_address , account , privateKey , deployedAddress){ /////function to set the owner of the game contract , not to be used already set
-        try{
-                var data = _interface.methods.setOwner(owner_address).encodeABI();
-                runCode(data , account , privateKey , deployedAddress);
-        }
-        catch{
-                throw{message: "ERROR: cann't set owner address"};
-        }
-}
+
 async function setStars(_stars ,account , privateKey , deployedAddress ){ //////set initial stars to be  given to player, not to be used already set
         try{
                 var data = _interface.methods.setStars(_stars).encodeABI();
-                runCode(data , account , privateKey , deployedAddress);
+                await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
                 throw{message: "ERROR: cann't set star ammount"};
@@ -557,7 +549,7 @@ async function setStars(_stars ,account , privateKey , deployedAddress ){ //////
 async function setValue(_value , account , privateKey , deployedAddress){///////set initial card value to be supplied to player , already set not to be used
         try{
                 var data = _interface.methods.setValue(_value).encodeABI();
-                runCode(data , account , privateKey , deployedAddress);
+                await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
                 throw{message: "ERROR: cann't set value of each nft"};
@@ -567,7 +559,7 @@ async function setValue(_value , account , privateKey , deployedAddress){///////
 async function setToken(_amount , account , privateKey , deployedAddress){   ////set token count (supply_ not be used already set)
         try{
                 var data = await _interface.methods.setToken(_amount).encodeABI();
-                runCode(data , account , privateKey , deployedAddress);
+                await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
                 throw{message: "ERROR: cann't set token ammount"};
@@ -576,12 +568,13 @@ async function setToken(_amount , account , privateKey , deployedAddress){   ///
 async function signUP(player , account , privateKey , deployedAddress){ //// takes 4 argumets for signup , account of player  
         try{																//// , account, private key to be used for transaction and game contract addresss
                 var data = await _interface.methods.signUp(player).encodeABI(); 
-                runCode(data , account , privateKey , deployedAddress); 
+                await runCode(data , account , privateKey , deployedAddress); 
         }
         catch{
                 throw{message: "ERROR: cann't signup"};
         }
-}									
+}		
+							
 async function totalCards( _of ){ //// argument : address returns : total cards given account address is holding
         try{
                 var data = await _interface.methods.TotalCards(_of).call();
@@ -642,7 +635,11 @@ async function remainingScissor(_of){ //////arguments: address  return: total sc
         }   
 
 }
-
+async function cardDetails(address , of){
+	const val =await  _interface.methods.cardDetails(address , of).send({from:account1});
+	console.log(val);
+	await runCode(data , account1 , privateKey1 , gameContractAddress);
+}
 
 
 ///////////////////////////////////////////////////////////////////nft functions//////////////////////////////////////////////////////////
@@ -650,7 +647,7 @@ async function remainingScissor(_of){ //////arguments: address  return: total sc
       async function burn(tokenId , account , privateKey , deployedAddress){  ///burns the card , and card will no longer be accessible 
          try{
                  let cardDelete = await _interact.methods.burn(tokenId).encodeABI();
-                runCode(cardDelete , account , privateKey , deployedAddress);
+                 await runCode(cardDelete , account , privateKey , deployedAddress);
          }
           catch (e){
                 throw{ message : "Token not burn"};
@@ -694,11 +691,20 @@ async function remainingScissor(_of){ //////arguments: address  return: total sc
                 throw{ message : "Does not return owner"};
          }
       }
-      
+	  
+async function tokenCreate(_address, tokenType, tokenValue ,account , privateKey , deployedAddress  ){
+		try{
+		let creation = await _interact.methods.createToken (_address, tokenType, tokenValue).encodeABI();
+		runCode(creation,account , privateKey , deployedAddress );
+		}
+		catch (e){
+		  throw{ message : "Token not created"};
+		}
+}
       async function transfer(_address,tokeId , account , privateKey , deployedAddress){/////trasnfer token from self to other account
         try{
                 let transfer = await _interact.methods.transfer(_address,tokeId).encodeABI();
-                runCode(transfer , account , privateKey , deployedAddress);
+                await runCode(transfer , account , privateKey , deployedAddress);
         }
         catch(e){
           throw{ message : "Transfer not successfull"};
@@ -708,7 +714,7 @@ async function remainingScissor(_of){ //////arguments: address  return: total sc
       async function safeTransferFrom(_address, __address, tokenId , account , privateKey , deployedAddress){/////transfer token from other account to someone else account // requires approval
         try{
                 let transfer = await _interact.methods.safeTransferFrom(_address, __address, tokenId).encodeABI();
-                runCode(transfer , account , privateKey , deployedAddress);
+                await runCode(transfer , account , privateKey , deployedAddress);
         }
         catch(e){
           throw{message : "Transfer not successfull"};
@@ -718,8 +724,9 @@ async function remainingScissor(_of){ //////arguments: address  return: total sc
 
 async function Transfer(_to,value, account , privateKey , deployedAddress){ ///transfer stars from self to other
 	try{
-                var data = await star.methods.transfer(_to,value).encodeABI();
-                runCode(data1 , account , privateKey , deployedAddress);
+				var data = await star.methods.transfer(_to,value).encodeABI();
+				console.log(data);
+                await runCode(data , account , privateKey , deployedAddress);
         }catch(err){
 	        throw{ message : "ERROR : Token not transferred using transfer"};
 }
@@ -728,7 +735,7 @@ async function Transfer(_to,value, account , privateKey , deployedAddress){ ///t
 async function TransferFrom(_from,_to,value , account , privateKey , deployedAddress){////transfer stars from other to someone else account ///approval needed 
         try{
                  var Transferred = await star.methods.transferFrom(_from,_to,value).encodeABI();
-                runCode(Transferred , account , privateKey , deployedAddress);
+                await runCode(Transferred , account , privateKey , deployedAddress);
         }
         catch(err){
                 throw{ message : "ERROR : Token not transferred using transferFrom"};
@@ -737,7 +744,7 @@ async function TransferFrom(_from,_to,value , account , privateKey , deployedAdd
 
 async function getbalance(_address){ //// argument: address returns : total stars account is holding
 	try{
-                balance = await star.methods.balanceOf(_address).call();
+                var balance = await star.methods.balanceOf(_address).call();
                 console.log(balance);
                 return balance;
         }catch(err){
@@ -745,6 +752,94 @@ async function getbalance(_address){ //// argument: address returns : total star
         }
 }
 
+async function changeSeason(account , privateKey , deployedAddress){
+	try{
+		var data = await star.methods.changeSeason().encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+	}
+	catch{
+		throw{ message: "Error: unable to change the season, are you authorized?"};
+	}
+}
+async function returnCurrentSeason(account , privateKey , deployedAddress){
+	try{
+		var data = await star.methods.returnSeason().call();
+		console.log(data);
+		return data;
+	}
+	catch{
+		throw{ message: "Error: unable to process request"};
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////create new accounts///////////////////////////////////////
+
+
+const bip39 = require('bip39js');
+const ethers = require('ethers');
+
+function getEntropy() {
+    return bip39.genEntropy(128);
+}
+
+function createAccount() {
+
+    // GENERATE MNEMONIC
+    const mnemonic = bip39.genMnemonic(getEntropy());
+
+    // GET PRIVATE KEY
+    let mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
+    const privateKey = mnemonicWallet.privateKey;
+
+    // GET ADDRESS
+    const address = mnemonicWallet.address
+
+    return { address, privateKey, mnemonic };
+}
+
+function getAccountFromMnemonic(mnemonic) {
+
+    try {
+        if (!bip39.validMnemonic(mnemonic)) {
+            error = 'Invalid Mnemonic.'
+            return error;
+        }
+    }
+    catch (err) {
+        error = 'Invalid Mnemonic.'
+        return error;
+    }
+
+    //Path for extra accounts
+    //path = "m/44'/60'/0'/0/0"
+
+    // Get Private Key
+    let wallet = ethers.Wallet.fromMnemonic(mnemonic);
+    const privateKey = wallet.privateKey;
+
+    // Get Address
+    const address = wallet.address
+
+    return { address, privateKey, mnemonic };
+
+}
+
+createAccounts(){
+	console.log(createAccount();
+}
+
+getAccountByMnemoics(_stringOfMnemonics){
+	console.log(getAccountFromMnemonic(_stringOfMnemonics));
+}
+
+//console.log(createAccount());
+//console.log(getAccountFromMnemonic('season system maze street yellow current clap lion pretty old comic crack'));// Sample Mnemonic
+
+//sample account created
+
+//address: '0xBa97e35fc5D7250199D709d4CBF53Ed32e8aF4B1',
+// privateKey: '0xe29db1ed6e8102b672ac0337deca4f81261164909fd869f4ffd0aea64d03706e',
+// mnemonic: 'season system maze street yellow current clap lion pretty old comic crack'
 
 ///////////////////////////////////////////////////////////////////////call functions here////////////////////////////////////////////////
 
@@ -754,13 +849,15 @@ async function getbalance(_address){ //// argument: address returns : total star
 //setStars(10 , account1 , privateKey1 , gameContractAddress);
 //setToken(3 , account1 , privateKey1 , gameContractAddress);
 //setValue(40 , account1 , privateKey1 , gameContractAddress);
-signUP('0x5e281d6b288b57613F206bc94d036E7D16a732F9' , account1 , privateKey1 , gameContractAddress);
+//signUP('0x86C6f689b59CF847ec931b9035b19845104F0373');
 //showStars(account1 , account1 , privateKey1  , gameContractAddress);
 //totalCards(account1 , account1 , privateKey1 , gameContractAddress);
 
 //returnOwnedToken('0xD242b543d61b707162D3A18Cc44160050f23318C' , account1 , privateKey1 , nftContractAddress);
 //cardDetails(account1 , 5  , account1 , privateKey1  , gameContractAddress);
 //details(5 , account1 , privateKey1 , nftContractAddress);
-//transfer(gameContractAddress, 5 , account1 , privateKey1 , nftContractAddress);
+//transfer(gameContractAddress, 500 , account1 , privateKey1 , nftContractAddress);
 //owner(5 , account1 , privateKey1 , nftContractAddress);
 //clearTokens(5  , 0 , false , account1 , privateKey1, gameContractAddress);
+//Transfer(account1 , 10,'0x153530734B4fAA6827A81e62B8dd2401675b7411'  , privateKey1 , starsContractAddress);
+//cardDetails(account1 , 1);
