@@ -4,19 +4,30 @@ const Web3 = require('web3')
 var providerURL = "https://rinkeby.infura.io/v3/e72daeeafa5f4e8cae0110b45fed3645"
 const web3 = new Web3(new Web3.providers.HttpProvider(providerURL));
 
-var gameContractAddress = '0x02BABFb7293c502A3BE6f3bfEbbd71bfB3B46eC9'
-var nftContractAddress = '0x94E3AcDeed5780B002c1C141926f6605704c5ef8'
-var starsContractAddress = '0x0A27A7370D14281152f7393Ed6bE963C2019F5fe'
-
+var gameContractAddress = '0x9Ffc06cc4d565B77ebCeF768D99B997Ad36c4870'
+var nftContractAddress = '0xf20FDBBcF06e532823dD6C1b0Fa0ee39C848Dc6E'
+var starsContractAddress = '0x1b83d8074e1cAd12dbCB5E2AdCde52fCaD4b1f14'
 //Game interface
-const interface =[{
+const interface = [{"constant":true,"inputs":[],"name":"stars","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"setOwner","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"tokenID1","type":"uint256"},{"name":"tokenID2","type":"uint256"},{"name":"status","type":"bool"}],"name":"clearTokens","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"nft_add","type":"address"}],"name":"set_nft_address","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"value","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"token_add","type":"address"}],"name":"set_token_address","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"nft","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"manager","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"setValue","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"}],"name":"TotalCards","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"player1","type":"address"},{"name":"player2","type":"address"},{"name":"token1","type":"uint256"},{"name":"token2","type":"uint256"}],"name":"playGame","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"}],"name":"remainingScissor","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"}],"name":"remainingPaper","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"card1","type":"uint256"},{"name":"card2","type":"uint256"}],"name":"decide","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":false,"inputs":[{"name":"_stars","type":"uint256"}],"name":"setStars","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_amount","type":"uint256"}],"name":"setToken","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"_of","type":"address"}],"name":"showStars","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"starCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"player","type":"address"}],"name":"signUp","outputs":[{"name":"","type":"bool"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"NoOfTokens","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"user","type":"address"},{"name":"tokenId","type":"uint256"}],"name":"cardDetails","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"},{"name":"_count","type":"uint256"}],"name":"blockStars","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"_manager","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"}],"name":"remainingRock","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
+var game = new web3.eth.Contract((interface) , gameContractAddress); //deployed address 
+
+
+//NFT interface
+const interface_nft =  [{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"tokenId","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"burn","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"name":"tokenOwners","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"contractAddress","type":"address"}],"name":"setGameContractAddress","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"name":"ownToken","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"returnSeason","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"name":"playersTokenCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"name":"approval","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"transfer","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"},{"name":"typ","type":"uint256"},{"name":"_totalcount","type":"bool"}],"name":"returnTokenCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"currentSeason","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"changeSeason","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"}],"name":"returnOwnedToken","outputs":[{"name":"","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"playeraddress","type":"address"},{"name":"cardtype","type":"uint256"},{"name":"_value","type":"uint256"}],"name":"createToken","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"name":"player","outputs":[{"name":"cardtype","type":"uint256"},{"name":"value","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"tokenDetails","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"contractAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_approved","type":"address"},{"indexed":true,"name":"_tokenId","type":"uint256"}],"name":"Approval","type":"event"}];
+var nft = new web3.eth.Contract((interface_nft) , nftContractAddress);
+
+
+//Stars interface 
+const interface_stars = 
+[
+	{
 		"constant": true,
 		"inputs": [],
-		"name": "stars",
+		"name": "name",
 		"outputs": [
 			{
 				"name": "",
-				"type": "address"
+				"type": "string"
 			}
 		],
 		"payable": false,
@@ -27,204 +38,19 @@ const interface =[{
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_newOwner",
+				"name": "_spender",
 				"type": "address"
-			}
-		],
-		"name": "setOwner",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "tokenID1",
-				"type": "uint256"
 			},
-			{
-				"name": "tokenID2",
-				"type": "uint256"
-			},
-			{
-				"name": "status",
-				"type": "bool"
-			}
-		],
-		"name": "clearTokens",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "nft_add",
-				"type": "address"
-			}
-		],
-		"name": "set_nft_address",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "value",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "token_add",
-				"type": "address"
-			}
-		],
-		"name": "set_token_address",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "nft",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "manager",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
 			{
 				"name": "_value",
 				"type": "uint256"
 			}
 		],
-		"name": "setValue",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_of",
-				"type": "address"
-			}
-		],
-		"name": "TotalCards",
+		"name": "approve",
 		"outputs": [
 			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "player1",
-				"type": "address"
-			},
-			{
-				"name": "player2",
-				"type": "address"
-			},
-			{
-				"name": "token1",
-				"type": "uint256"
-			},
-			{
-				"name": "token2",
-				"type": "uint256"
-			}
-		],
-		"name": "playGame",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_of",
-				"type": "address"
-			}
-		],
-		"name": "remainingScissor",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_of",
-				"type": "address"
-			}
-		],
-		"name": "remainingPaper",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
+				"name": "success",
+				"type": "bool"
 			}
 		],
 		"payable": false,
@@ -235,76 +61,19 @@ const interface =[{
 		"constant": true,
 		"inputs": [
 			{
-				"name": "card1",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
 				"type": "uint256"
 			},
 			{
-				"name": "card2",
-				"type": "uint256"
-			}
-		],
-		"name": "decide",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "pure",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_stars",
-				"type": "uint256"
-			}
-		],
-		"name": "setStars",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
 				"name": "",
 				"type": "address"
 			}
 		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "setToken",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_of",
-				"type": "address"
-			}
-		],
-		"name": "showStars",
+		"name": "allowance",
 		"outputs": [
 			{
 				"name": "",
@@ -318,7 +87,7 @@ const interface =[{
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "starCount",
+		"name": "totalSupply",
 		"outputs": [
 			{
 				"name": "",
@@ -333,14 +102,22 @@ const interface =[{
 		"constant": false,
 		"inputs": [
 			{
-				"name": "player",
+				"name": "_from",
 				"type": "address"
+			},
+			{
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"name": "_value",
+				"type": "uint256"
 			}
 		],
-		"name": "signUp",
+		"name": "transferFrom",
 		"outputs": [
 			{
-				"name": "",
+				"name": "success",
 				"type": "bool"
 			}
 		],
@@ -351,7 +128,7 @@ const interface =[{
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "NoOfTokens",
+		"name": "decimals",
 		"outputs": [
 			{
 				"name": "",
@@ -363,28 +140,109 @@ const interface =[{
 		"type": "function"
 	},
 	{
+		"constant": true,
+		"inputs": [],
+		"name": "gameContractAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"constant": false,
 		"inputs": [
 			{
-				"name": "user",
+				"name": "_newaddress",
 				"type": "address"
-			},
-			{
-				"name": "tokenId",
-				"type": "uint256"
 			}
 		],
-		"name": "cardDetails",
+		"name": "changeowner",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "request",
+				"type": "address"
+			}
+		],
+		"name": "balanceOf",
 		"outputs": [
 			{
 				"name": "",
 				"type": "uint256"
-			},
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "returnSeason",
+		"outputs": [
 			{
 				"name": "",
 				"type": "uint256"
 			}
 		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "ownerAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "symbol",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_reduceSupply",
+				"type": "uint256"
+			}
+		],
+		"name": "DecreaseSupply",
+		"outputs": [],
 		"payable": true,
 		"stateMutability": "payable",
 		"type": "function"
@@ -393,28 +251,65 @@ const interface =[{
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_of",
+				"name": "_to",
 				"type": "address"
 			},
 			{
-				"name": "_count",
+				"name": "_value",
 				"type": "uint256"
 			}
 		],
-		"name": "blockStars",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
+		"name": "transfer",
+		"outputs": [
+			{
+				"name": "success",
+				"type": "bool"
+			}
+		],
+		"payable": true,
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "_manager",
+		"name": "currentSeason",
 		"outputs": [
 			{
 				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "changeSeason",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
 				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "balances",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -425,38 +320,77 @@ const interface =[{
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_of",
-				"type": "address"
-			}
-		],
-		"name": "remainingRock",
-		"outputs": [
-			{
-				"name": "",
+				"name": "_newSupply",
 				"type": "uint256"
 			}
 		],
-		"payable": false,
-		"stateMutability": "nonpayable",
+		"name": "IncreaseSupply",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"name": "_initialSupply",
+				"type": "uint256"
+			},
+			{
+				"name": "_gameContractAddress",
+				"type": "address"
+			}
+		],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "Transfer",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_spender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "Approval",
+		"type": "event"
 	}
-]
-var _interface = new web3.eth.Contract((interface) , gameContractAddress); //deployed address 
+];
 
-
-//NFT interface
-const interface_nft =[{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"name":"player","outputs":[{"name":"cardtype","type":"uint256"},{"name":"value","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"tokenId","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"approval","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"name":"playersTokenCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"burn","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"contractAddress","type":"address"}],"name":"setGameContractAddress","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"name":"ownToken","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_tokenId","type":"uint256"}],"name":"transfer","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"_address","type":"address"},{"name":"typ","type":"uint256"},{"name":"_totalcount","type":"bool"}],"name":"returnTokenCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"}],"name":"returnOwnedToken","outputs":[{"name":"","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"playeraddress","type":"address"},{"name":"cardtype","type":"uint256"},{"name":"_value","type":"uint256"}],"name":"createToken","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"tokenOwners","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"tokenDetails","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"contractAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_approved","type":"address"},{"indexed":true,"name":"_tokenId","type":"uint256"}],"name":"Approval","type":"event"}];
-var _interact = new web3.eth.Contract((interface_nft) , nftContractAddress);
-
-
-//Stars interface 
-const interface_stars = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balances","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newaddress","type":"address"}],"name":"changeowner","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"request","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ownerAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_reduceSupply","type":"uint256"}],"name":"DecreaseSupply","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"balanceOwnerAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newSupply","type":"uint256"}],"name":"IncreaseSupply","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"inputs":[{"name":"_initialSupply","type":"uint256"},{"name":"gameContractAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_spender","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Approval","type":"event"}]
 var star = new web3.eth.Contract(interface_stars, starsContractAddress);
 
 
@@ -480,7 +414,7 @@ const privateKey4 = new Buffer.from('7958cb545ad3be8ad142a8f632c7c7cc5c8bc18bdd0
 async function runCode(data , account , privateKey,  deployedAddress){
         
         var count = await web3.eth.getTransactionCount(account); 
-		console.log(count);
+		//console.log(count);
         var Price =  await web3.eth.getGasPrice();
         
        
@@ -518,7 +452,7 @@ async function runCode(data , account , privateKey,  deployedAddress){
 //////////////////////////////////////////////////////////////////////////////interact with game functions //////////////////////////////////////////
 async function setNftAddress(_nftAddress , account , privateKey , deployedAddress){    ///function to link nft with game contract ///not to be used, it's already set
         try{
-                var data = _interface.methods.set_nft_address(_nftAddress).encodeABI();
+                var data = game.methods.set_nft_address(_nftAddress).encodeABI();
                 await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
@@ -528,7 +462,7 @@ async function setNftAddress(_nftAddress , account , privateKey , deployedAddres
 }
 async function setERC20Contractaddress(starContract_address ,  account , privateKey , deployedAddress){ ///function to link stars conttract with game contract //not to be used , already set
         try{
-                var data = _interface.methods.set_token_address(starContract_address).encodeABI();
+                var data = game.methods.set_token_address(starContract_address).encodeABI();
                 await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
@@ -539,7 +473,7 @@ async function setERC20Contractaddress(starContract_address ,  account , private
 
 async function setStars(_stars ,account , privateKey , deployedAddress ){ //////set initial stars to be  given to player, not to be used already set
         try{
-                var data = _interface.methods.setStars(_stars).encodeABI();
+                var data = game.methods.setStars(_stars).encodeABI();
                 await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
@@ -548,7 +482,7 @@ async function setStars(_stars ,account , privateKey , deployedAddress ){ //////
 }
 async function setValue(_value , account , privateKey , deployedAddress){///////set initial card value to be supplied to player , already set not to be used
         try{
-                var data = _interface.methods.setValue(_value).encodeABI();
+                var data = game.methods.setValue(_value).encodeABI();
                 await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
@@ -558,7 +492,7 @@ async function setValue(_value , account , privateKey , deployedAddress){///////
 }
 async function setToken(_amount , account , privateKey , deployedAddress){   ////set token count (supply_ not be used already set)
         try{
-                var data = await _interface.methods.setToken(_amount).encodeABI();
+                var data = await game.methods.setToken(_amount).encodeABI();
                 await runCode(data , account , privateKey , deployedAddress);
         }
         catch{
@@ -567,7 +501,7 @@ async function setToken(_amount , account , privateKey , deployedAddress){   ///
 }
 async function signUP(player , account , privateKey , deployedAddress){ //// takes 4 argumets for signup , account of player  
         try{																//// , account, private key to be used for transaction and game contract addresss
-                var data = await _interface.methods.signUp(player).encodeABI(); 
+                var data = await game.methods.signUp(player).encodeABI(); 
                 await runCode(data , account , privateKey , deployedAddress); 
         }
         catch{
@@ -577,7 +511,7 @@ async function signUP(player , account , privateKey , deployedAddress){ //// tak
 							
 async function totalCards( _of ){ //// argument : address returns : total cards given account address is holding
         try{
-                var data = await _interface.methods.TotalCards(_of).call();
+                var data = await game.methods.TotalCards(_of).call();
                 //run_code(data);
                 console.log(data);
                 return data;
@@ -589,7 +523,7 @@ async function totalCards( _of ){ //// argument : address returns : total cards 
 
 async function showStars(_of){   //  argument: address returns : total stars given account is holding
         try{
-                var data = await _interface.methods.showStars(_of).call(); 
+                var data = await game.methods.showStars(_of).call(); 
                 //run_code(data);
                 console.log(data);
                 return data;
@@ -600,7 +534,7 @@ async function showStars(_of){   //  argument: address returns : total stars giv
 }
 async function remainingRock(_of){/////argument : address   returns: total rock cards of account
         try{
-                var data= await _interface.methods.remainingRock(player);
+                var data= await game.methods.remainingRock(player);
                 console.log(data);
                 return data;
         }
@@ -612,7 +546,7 @@ async function remainingRock(_of){/////argument : address   returns: total rock 
 }
 async function remainingPaper(_of){//////argumets : address    returns: totak paper cards of account
         try{
-                var data= await _interface.methods.remainingPaper(player);
+                var data= await game.methods.remainingPaper(player);
                 console.log(data);
                 return data;
         }
@@ -625,7 +559,7 @@ async function remainingPaper(_of){//////argumets : address    returns: totak pa
 
 async function remainingScissor(_of){ //////arguments: address  return: total scissor cards account is holding
         try{
-                var data= await _interface.methods.remainingScissor(player);
+                var data= await game.methods.remainingScissor(player);
                 console.log(data);
                 return data;
         }
@@ -636,7 +570,7 @@ async function remainingScissor(_of){ //////arguments: address  return: total sc
 
 }
 async function cardDetails(address , of){
-	const val =await  _interface.methods.cardDetails(address , of).send({from:account1});
+	const val =await  game.methods.cardDetails(address , of).send({from:account1});
 	console.log(val);
 	await runCode(data , account1 , privateKey1 , gameContractAddress);
 }
@@ -646,7 +580,7 @@ async function cardDetails(address , of){
      
       async function burn(tokenId , account , privateKey , deployedAddress){  ///burns the card , and card will no longer be accessible 
          try{
-                 let cardDelete = await _interact.methods.burn(tokenId).encodeABI();
+                 let cardDelete = await nft.methods.burn(tokenId).encodeABI();
                  await runCode(cardDelete , account , privateKey , deployedAddress);
          }
           catch (e){
@@ -657,7 +591,7 @@ async function cardDetails(address , of){
        async function details(tokeId){ ////argument : tokenID   returns: card type ie rock . paper or scissor and card value
         try{
                 var cardType;
-                cardType = await _interact.methods.tokenDetails(tokeId).call();
+                cardType = await nft.methods.tokenDetails(tokeId).call();
                 //It will return both type and value both respectively 
                 //transaction(trx);
                 console.log(cardType);
@@ -666,11 +600,21 @@ async function cardDetails(address , of){
         catch (e) {
                  throw{ message : "Token details not given"};
         }
-      }
+	  } 
+	  async function allDetailsOfOwnedTokens(address){ //////////////return all token details along with owned tokn by any address //argument: address of user
+			try{
+				var details = await nft.methods.returnAllDetails(address).call();
+				console.log(details);
+				return (details);
+			}
+			catch (e){
+				throw{ message : "Token details not found"};
+			}
+		}
       
       async function returnOwnedToken(_address){ //// argument : address   returns : array of Ids given account address is holding
         try{
-                let tokenList = await _interact.methods.returnOwnedToken(_address).call();
+                let tokenList = await nft.methods.returnOwnedToken(_address).call();
                 console.log(tokenList);
                 return owner;
         }
@@ -682,7 +626,7 @@ async function cardDetails(address , of){
    
        async function ownerOf(tokeId){////argument : tokenId    returns: account address of the owner of given tokenID
          try{
-                let cardOwner = await _interact.methods.ownerOf(tokeId).call();
+                let cardOwner = await nft.methods.ownerOf(tokeId).call();
 				//transaction(trx);
 				console.log(cardOwner);
                 return cardOwner;
@@ -694,7 +638,7 @@ async function cardDetails(address , of){
 	  
 async function tokenCreate(_address, tokenType, tokenValue ,account , privateKey , deployedAddress  ){
 		try{
-		let creation = await _interact.methods.createToken (_address, tokenType, tokenValue).encodeABI();
+		let creation = await nft.methods.createToken (_address, tokenType, tokenValue).encodeABI();
 		runCode(creation,account , privateKey , deployedAddress );
 		}
 		catch (e){
@@ -703,7 +647,7 @@ async function tokenCreate(_address, tokenType, tokenValue ,account , privateKey
 }
       async function transfer(_address,tokeId , account , privateKey , deployedAddress){/////trasnfer token from self to other account
         try{
-                let transfer = await _interact.methods.transfer(_address,tokeId).encodeABI();
+                let transfer = await nft.methods.transfer(_address,tokeId).encodeABI();
                 await runCode(transfer , account , privateKey , deployedAddress);
         }
         catch(e){
@@ -713,7 +657,7 @@ async function tokenCreate(_address, tokenType, tokenValue ,account , privateKey
       
       async function safeTransferFrom(_address, __address, tokenId , account , privateKey , deployedAddress){/////transfer token from other account to someone else account // requires approval
         try{
-                let transfer = await _interact.methods.safeTransferFrom(_address, __address, tokenId).encodeABI();
+                let transfer = await nft.methods.safeTransferFrom(_address, __address, tokenId).encodeABI();
                 await runCode(transfer , account , privateKey , deployedAddress);
         }
         catch(e){
@@ -750,6 +694,15 @@ async function getbalance(_address){ //// argument: address returns : total star
         }catch(err){
                 throw{ message : "ERROR : Balance not retrieved"};
         }
+}
+async function approve(address , amount , account ,privateKey , deployedAddress){
+	try{
+		var data = await star.methods.approve(address , amount).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+	}
+	catch{
+		throw{ message: "ERROR: Unable to approve the user"};
+	}
 }
 
 async function changeSeason(account , privateKey , deployedAddress){
@@ -824,13 +777,13 @@ function getAccountFromMnemonic(mnemonic) {
 
 }
 
-createAccounts(){
-	console.log(createAccount();
-}
+function createAccounts(){
+	console.log(createAccount());
+};
 
-getAccountByMnemoics(_stringOfMnemonics){
+function getAccountByMnemoics(_stringOfMnemonics){
 	console.log(getAccountFromMnemonic(_stringOfMnemonics));
-}
+};
 
 //console.log(createAccount());
 //console.log(getAccountFromMnemonic('season system maze street yellow current clap lion pretty old comic crack'));// Sample Mnemonic
@@ -843,14 +796,14 @@ getAccountByMnemoics(_stringOfMnemonics){
 
 ///////////////////////////////////////////////////////////////////////call functions here////////////////////////////////////////////////
 
-//setNftAddress(nftContractAddress , account1 , privateKey1 , gameContractAddress);
+setNftAddress(nftContractAddress , account1 , privateKey1 , gameContractAddress);
 //setERC20Contractaddress(starsContractAddress , account1 , privateKey1 , gameContractAddress);
 //setOwner(gameContractAddress , account1 , privateKey1 , gameContractAddress);
 //setStars(10 , account1 , privateKey1 , gameContractAddress);
 //setToken(3 , account1 , privateKey1 , gameContractAddress);
 //setValue(40 , account1 , privateKey1 , gameContractAddress);
-//signUP('0x86C6f689b59CF847ec931b9035b19845104F0373');
-//showStars(account1 , account1 , privateKey1  , gameContractAddress);
+//signUP(account2 , account1 , privateKey1 , gameContractAddress);
+//showStars(account2 );
 //totalCards(account1 , account1 , privateKey1 , gameContractAddress);
 
 //returnOwnedToken('0xD242b543d61b707162D3A18Cc44160050f23318C' , account1 , privateKey1 , nftContractAddress);
@@ -859,5 +812,6 @@ getAccountByMnemoics(_stringOfMnemonics){
 //transfer(gameContractAddress, 500 , account1 , privateKey1 , nftContractAddress);
 //owner(5 , account1 , privateKey1 , nftContractAddress);
 //clearTokens(5  , 0 , false , account1 , privateKey1, gameContractAddress);
-//Transfer(account1 , 10,'0x153530734B4fAA6827A81e62B8dd2401675b7411'  , privateKey1 , starsContractAddress);
+//Transfer(account2 , 10, account1  , privateKey1 , starsContractAddress);
 //cardDetails(account1 , 1);
+//approve(gameContractAddress , 1000000000 , account1 , priva teKey1 , starsContractAddress);

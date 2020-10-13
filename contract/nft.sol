@@ -14,6 +14,7 @@ contract RPS{
     mapping(uint256 => mapping(uint256 => address)) public approval;
     
     mapping(uint256 => mapping(uint256 => address)) public tokenOwners; 
+    mapping(address=>mapping(uint256=> string)) allDetails;
     
     mapping (address => mapping(uint256 => uint256[])) public ownToken; // return which tokenid does owner has
     
@@ -53,6 +54,16 @@ contract RPS{
         player[playeraddress][currentSeason][tokenId].value = _value;
         ownToken[playeraddress][currentSeason].push(tokenId);
         playersTokenCount[playeraddress][currentSeason][cardtype]+=1;
+        string memory tempTok ="";
+        string memory tempVal ="";
+        string memory tempTyp ="";
+        string memory fnl="";
+        tempTyp = uintToString(cardtype);
+        tempVal = uintToString(_value);
+        tempTok = uintToString(tokenId);
+        fnl = string(abi.encodePacked(tempTok,"!", tempTyp , "!" , tempVal));
+        allDetails[playeraddress][currentSeason] = string(abi.encodePacked(allDetails[playeraddress][currentSeason] , "@" , fnl));
+        
          
         tokenOwners[currentSeason][tokenId]=playeraddress;
        
@@ -64,7 +75,26 @@ contract RPS{
         transfer( address(0), _tokenId);
         
     }
+     
+    function uintToString(uint v) public returns (string) {
+        uint maxlength = 100;
+        bytes memory reversed = new bytes(maxlength);
+        uint i = 0;
+        while (v != 0) {
+            uint remainder = v % 10;
+            v = v / 10;
+            reversed[i++] = byte(48 + remainder);
+        }
+        bytes memory s = new bytes(i);
+        for (uint j = 0; j < i; j++) {
+            s[j] = reversed[i - 1 - j];
+        }
+        return string(s);
+    }
     
+    function returnAllDetails(address _user) public view returns(string){
+        return allDetails[_user][currentSeason];
+    }
     
 
     function tokenDetails (uint256 _tokenId) public view returns(uint256,uint256){
