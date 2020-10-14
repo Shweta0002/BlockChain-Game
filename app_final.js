@@ -7,6 +7,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider(providerURL));
 var gameContractAddress = '0xf0B1CD9C8D0f723E3Aa677291aace58A5A3621a7'
 var nftContractAddress = '0x3985Bc15774A28E36785b3e2cEEa39E66bfd14b6'
 var starsContractAddress = '0xA219006362Ea285ad586eC6baaB0244FF611e674'
+var marketPlaceAddress = ''
 //Game interface
 const interface = [{"constant":true,"inputs":[],"name":"stars","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"setOwner","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"tokenID1","type":"uint256"},{"name":"tokenID2","type":"uint256"},{"name":"status","type":"bool"}],"name":"clearTokens","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"nft_add","type":"address"}],"name":"set_nft_address","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"value","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"token_add","type":"address"}],"name":"set_token_address","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"nft","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"manager","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"setValue","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"}],"name":"TotalCards","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"player1","type":"address"},{"name":"player2","type":"address"},{"name":"token1","type":"uint256"},{"name":"token2","type":"uint256"}],"name":"playGame","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"}],"name":"remainingScissor","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"}],"name":"remainingPaper","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"card1","type":"uint256"},{"name":"card2","type":"uint256"}],"name":"decide","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":false,"inputs":[{"name":"_stars","type":"uint256"}],"name":"setStars","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_amount","type":"uint256"}],"name":"setToken","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"_of","type":"address"}],"name":"showStars","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"starCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"player","type":"address"}],"name":"signUp","outputs":[{"name":"","type":"bool"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"NoOfTokens","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"user","type":"address"},{"name":"tokenId","type":"uint256"}],"name":"cardDetails","outputs":[{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"},{"name":"_count","type":"uint256"}],"name":"blockStars","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"_manager","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_of","type":"address"}],"name":"remainingRock","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
 var game = new web3.eth.Contract((interface) , gameContractAddress); //deployed address 
@@ -871,6 +872,9 @@ const interface_stars =
 var star = new web3.eth.Contract(interface_stars, starsContractAddress);
 
 
+const interface_marketPlace = ;
+var market = new web3.eth.Contract((interface_marketPlace) , marketPlaceAddress);
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////ACCOUNTS USED////////////
 
 const account1  = '0x273C249b8bE25a88aDe9ec182655Af6ae263C58a'
@@ -1191,7 +1195,7 @@ async function changeSeason(account , privateKey , deployedAddress){
 		throw{ message: "Error: unable to change the season, are you authorized?"};
 	}
 }
-async function returnCurrentSeason(account , privateKey , deployedAddress){
+async function returnCurrentSeason(){
 	try{
 		var data = await star.methods.returnSeason().call();
 		console.log(data);
@@ -1201,7 +1205,192 @@ async function returnCurrentSeason(account , privateKey , deployedAddress){
 		throw{ message: "Error: unable to process request"};
 	}
 }
+///////////////////////////////market place functions //////////////////////////////////////////////////////////////////////
+async function setNftAddress(address , account , privateKey , deployedAddress){
+	try{
+		var data = await market.methods.setNftAddress().encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to set nft address in market contract"};
+	}
+}
+async function setStarAddress(address , account , privateKey , deployedAddress){
+	try{
+		var data = await market.methods.setErc20Address().encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to set ERC20(stars) address in market contract"};
+	}
+}
+	
+async function setMarketContractAddress(address , account , privateKey , deployedAddress){
+	try{
+		var data = await market.methods.setMarketContractAddress().encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to set market address in market contract"};
+	}
+}
+	
+async function increaseStarSupplyInMarket(AmountOfStars , account , privateKey , deployedAddress){ //only called by admins 
+	try{
+		var data = await market.methods.increaseStarSupply(AmountOfStars).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to increase star supply in market "};
+	}
+}
+	
+async function decreaseStarSupplyInMarket(AmountOfStars , account , privateKey , deployedAddress){ //only called by admins
+	try{
+		var data = await market.methods.decreaseStarSupply(AmountOfStars).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to decrease star supply in market contract"};
+	}
+}
+async function setNftPrice(priceOfTokens , account , privateKey , deployedAddress){ //only called by admins
+	try{
+		var data = await market.methods.setNftPrice(priceOfTokens).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to set token price"};
+	}
+}
+async function setStarsPrice(priceOfStars , account , privateKey , deployedAddress){ //only called by admins
+	try{
+		var data = await market.methods.setNftPrice(priceOfStars).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to set stars price"};
+	}
+}
+async function showTotalPool(){  //gives the available pool size of stars 
+	try{
+		var data = await market.methods.showTotalPool().call();
+		console.log(data);
+		return data;
+	}
+	catch{
+		throw{ message: "Error: unable to process request"};
+	}
+}
+async function buyStars(from_address , amount , account , privateKey , deployedAddress){   //called by anyone , arguments: account from which to buy , amount to stars to buy
+	try{
+		var data = await market.methods.buyStars(from_address , amount).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to process request to buy stars"};
+	}
+}
+async function sellStars(AmountOfStars , privateKey , deployedAddress){  //place stars for selling in marketplace
+	try{
+		var data = await market.methods.sellStar(amount).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to place stars for selling"};
+	}
+}
+async function increaseTokenSupply(cardType, cardValue , account , privateKey , deployedAddress){  //only called by admins , this will create new tokens on maket place address for selling
+	try{
+		var data = await market.methods.increaseTokenSupply(cardType , cardValue).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to increas tokens in market place"};
+	}
+}
+async function decreaseTokenSupply(tokenId, privateKey , deployedAddress){  //only called by admins , this will transfer back the tokens to admins
+	try{
+		var data = await market.methods.decreaseTokenSupply(tokenId).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to decrease token supply in market place"};
+	}
+}
 
+async function sellTokens(tokenId , account , privateKey , deployedAddress){   //anyone can place their token for selling 
+	try{
+		var data = await market.methods.sellNFT(tokenId).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to place token for selling in market"};
+	}
+}
+async function buyTokens(tokenId , account , privateKey , deployedAddress){ //anyone can buy token , just need to give a amount (value for buying)
+	try{
+		var data = await market.methods.buyNFT(tokenId).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to process request for token requested(may be sold)"};
+	}
+}
+
+async function makeTokenAvailableForBidding(tokenID , account , privateKey , deployedAddress){  //place token in market for bidding 
+	try{
+		var data = await market.methods.makeTokenAvailableForBidding(tokenID).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to place token for bidding"};
+	}
+}
+async function closeBidding( tokenId , bidderAddress , amountOfBidding, account , privateKey , deployedAddress){  // remove token from bidding  after a sponsor is decided 
+	try{
+		var data = await market.methods.closeBidding(tokenId , bidderAddress , amountOfBidding).encodeABI();
+		await runCode(data , account , privateKey , deployedAddress);
+		
+	}
+	catch{
+		throw{ message: "Error: unable to process request , already closed"};
+	}
+}
+async function showAvailableToken(){ //show all the available tokens for 
+	try{
+		var data = await market.methods.showAvailableToken().call();
+		console.log(data);
+		return data;
+	}
+	catch{
+		throw{ message: "Error: unable to process request"};
+	}
+}
+async function getBiddingStatus(){ //get biding statys fo token whether placed for bidding as if so token cann't be used for playing games 
+	try{
+		var data = await market.methods.getBiddingStatus().call();
+		console.log(data);
+		return data;
+	}
+	catch{
+		throw{ message: "Error: unable to process request"};
+	}
+}
 ////////////////////////////////////////////////////////////////////////////create new accounts///////////////////////////////////////
 
 
