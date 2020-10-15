@@ -135,12 +135,12 @@ contract MarketPlace {
         }
     }
 
-    function sellStar(address starOwner, uint256 count) public {
+    function sellStar(uint256 count) public {
         // sell star
-        require(starOwner == msg.sender);
-        require(stars.balanceOf(starOwner) >= count);
-        stars.transfer(__address, count);
-        mappedPool[starOwner] = count;
+
+        require(stars.balanceOf(msg.sender) >= count);
+        //stars.transfer(__address,count);
+        mappedPool[msg.sender] += count;
         totalPool = totalPool + count;
     }
 
