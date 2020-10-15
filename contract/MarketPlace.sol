@@ -56,6 +56,16 @@ contract MarketPlace {
         address buyer;
         address seller;
     }
+
+    mapping(uint256 => biddingInformation) public bidderDetails;
+
+    struct biddingInformation {
+        bool is_available;
+        address owner;
+        address bidder;
+        uint256 value;
+    }
+
     address public __address;
 
     uint256 totalPool;
@@ -75,7 +85,7 @@ contract MarketPlace {
         owner_address = msg.sender;
     }
 
-    function setAddress(address _address) public onlyOwner {
+    function setNftAddress(address _address) public onlyOwner {
         //set NFT token contract address (ERC721)
         nft = NFT(_address);
     }
@@ -85,7 +95,7 @@ contract MarketPlace {
         stars = erc20(___address);
     }
 
-    function contractAddress(address maketPlace) public {
+    function setMarketContractAddress(address maketPlace) public {
         // set market place address
         __address = maketPlace;
     }
@@ -96,7 +106,7 @@ contract MarketPlace {
         stars.transferFrom(owner_address, __address, value);
         available_star_count = available_star_count + value;
         totalPool = totalPool + value;
-        mappedPool[__address] = value;
+        mappedPool[__address] += value;
     }
 
     function decreaseStarSupply(uint256 value) public {
@@ -105,6 +115,7 @@ contract MarketPlace {
         stars.transfer(owner_address, value);
         available_star_count = available_star_count - value;
         totalPool = totalPool - value;
+        mappedPool[__address] -= value;
     }
 
     function setStarsPrice(uint256 _price) public onlyOwner {
@@ -122,7 +133,7 @@ contract MarketPlace {
         return totalPool;
     }
 
-    function BuyStars(address _from, uint256 amount) public payable {
+    function buyStars(address _from, uint256 amount) public payable {
         // this will be call by player who want to buy stars
         require(amount <= mappedPool[_from]);
         require(msg.value >= amount * starsPrice);
@@ -160,9 +171,6 @@ contract MarketPlace {
         require(msg.sender == owner_address, "Only Admin Can Call");
         nft.transfer(owner_address, tokenId);
         available_token_count--;
-        token_details[tokenId].is_available = false;
-        token_details[tokenId].buyer = address(0);
-        token_details[tokenId].seller = address(0);
     }
 
     function sellNFT(uint256 _tokenId) public {
@@ -186,10 +194,21 @@ contract MarketPlace {
         available_token_count++;
     }
 
+    function getBidStatus(uint256 tokenId) public view returns (bool) {
+        return bidderDetails[tokenId].is_available;
+    }
+
     function buyNFT(uint256 _tokenId) public payable {
         address owner;
         owner = nft.ownerOf(_tokenId);
-        require(owner == token_details[_tokenId].seller); //checks token owner is the seller of token
+        require(
+            owner == token_details[_tokenId].seller,
+            "The person does not owen this token"
+        ); //checks token owner is the seller of token
+        require(
+            bidderDetails[_tokenId].is_available != true,
+            "The token cannot be buy as it is avaiable for bidding"
+        );
         uint256 token_type;
         uint256 value;
         (token_type, value) = nft.tokenDetails(_tokenId);
@@ -220,5 +239,29 @@ contract MarketPlace {
             }
         }
         return available_token_for_sell;
+    }
+
+    function makeTokenAvailableForBidding(uint256 tokenId) public {
+        require(
+            nft.ownerOf(tokenId) == msg.sender,
+            "The token is not owned by the person"
+        );
+        bidderDetails[tokenId].is_available = true;
+        bidderDetails[tokenId].owner = nft.ownerOf(tokenId);
+        bidderDetails[tokenId].bidder = address(0);
+        bidderDetails[tokenId].value = 0;
+    }
+
+    function closeBidding(
+        uint256 tokenId,
+        address bidderAddress,
+        uint256 amountOfBidding
+    ) public {
+        address tokenOwner = nft.ownerOf(tokenId);
+        nft.transfer(tokenOwner, tokenId);
+        bidderDetails[tokenId].is_available = false;
+        bidderDetails[tokenId].owner = tokenOwner;
+        bidderDetails[tokenId].bidder = bidderAddress;
+        bidderDetails[tokenId].value = amountOfBidding;
     }
 }
