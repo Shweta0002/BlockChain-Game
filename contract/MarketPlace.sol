@@ -1,234 +1,267 @@
-pragma solidity >=0.4.17;
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.4.23;
 
-contract RPS {
-    struct card {
-        uint256 cardtype; //1: Rock , 2: Paper, 3 : Scissors
-        uint256 value;
-    }
-
-    mapping(address => mapping(uint256 => mapping(uint256 => card)))
-        public player;
-
-    mapping(address => mapping(uint256 => mapping(uint256 => uint256)))
-        public playersTokenCount;
-
-    mapping(uint256 => mapping(uint256 => address)) public approval;
-
-    mapping(uint256 => mapping(uint256 => address)) public tokenOwners;
-    mapping(address => mapping(uint256 => string)) allDetails;
-
-    mapping(address => mapping(uint256 => uint256[])) public ownToken; // return which tokenid does owner has
-
-    event Transfer(address indexed from, address indexed to, uint256 value);
-
-    event Approval(
-        address indexed _owner,
-        address indexed _approved,
-        uint256 indexed _tokenId
-    );
-
-    uint256 public tokenId = 0;
-
-    //uint256 public totalCount =0;
-    address contractowner;
-    address gameContractAddress;
-    uint256 public currentSeason = 1;
-    address marketAddress;
-
-    function RPS() public {
-        contractowner = msg.sender;
-    }
-
-    function setGameContractAddress(address contractAddress) public payable {
-        require(msg.sender == contractowner);
-        gameContractAddress = contractAddress;
-    }
-
-    function setMarketAddress(address _address) public payable {
-        require(msg.sender == contractowner);
-        marketAddress = _address;
-    }
-
-    function changeSeason() public payable onlyOwner {
-        currentSeason += 1;
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == contractowner);
-        _;
-    }
-
-    function createToken(
-        address playeraddress,
-        uint256 cardtype,
-        uint256 _value
-    ) public payable returns (uint256) {
-        /* It will create the token at contractowner address */
-        require(
-            msg.sender == contractowner ||
-                msg.sender == gameContractAddress ||
-                msg.sender == marketAddress
-        );
-        player[playeraddress][currentSeason][++tokenId].cardtype = cardtype;
-        player[playeraddress][currentSeason][tokenId].value = _value;
-        ownToken[playeraddress][currentSeason].push(tokenId);
-        playersTokenCount[playeraddress][currentSeason][cardtype] += 1;
-        string memory tempTok = "";
-        string memory tempVal = "";
-        string memory tempTyp = "";
-        string memory fnl = "";
-        tempTyp = uintToString(cardtype);
-        tempVal = uintToString(_value);
-        tempTok = uintToString(tokenId);
-        fnl = string(abi.encodePacked(tempTok, "!", tempTyp, "!", tempVal));
-        allDetails[playeraddress][currentSeason] = string(
-            abi.encodePacked(allDetails[playeraddress][currentSeason], "@", fnl)
-        );
-
-        tokenOwners[currentSeason][tokenId] = playeraddress;
-        return tokenId;
-    }
-
-    function burn(uint256 _tokenId) public {
-        require(msg.sender != address(0));
-        transfer(address(0), _tokenId);
-    }
-
-    function uintToString(uint256 v) public returns (string) {
-        uint256 maxlength = 100;
-        bytes memory reversed = new bytes(maxlength);
-        uint256 i = 0;
-        while (v != 0) {
-            uint256 remainder = v % 10;
-            v = v / 10;
-            reversed[i++] = bytes1(48 + remainder);
-        }
-        bytes memory s = new bytes(i);
-        for (uint256 j = 0; j < i; j++) {
-            s[j] = reversed[i - 1 - j];
-        }
-        return string(s);
-    }
-
-    function returnAllDetails(address _user) public view returns (string) {
-        return allDetails[_user][currentSeason];
-    }
-
-    function tokenDetails(uint256 _tokenId)
-        public
-        view
-        returns (uint256, uint256)
-    {
-        /* Function to return the type of the token and its value*/
-        require(
-            tokenOwners[currentSeason][_tokenId] != address(0),
-            "Not a valid token"
-        );
-        address _address = tokenOwners[currentSeason][_tokenId];
-        return (
-            (player[_address][currentSeason][_tokenId].cardtype),
-            player[_address][currentSeason][_tokenId].value
-        );
-    }
-
-    function returnOwnedToken(address owner) public view returns (uint256[]) {
-        return ownToken[owner][currentSeason];
-    }
-
-    function returnTokenCount(
-        address _address,
-        uint256 typ,
-        bool _totalcount
-    ) public view returns (uint256) {
-        /* Function to return the total count of the token*/
-        if (_totalcount == true) {
-            uint256 count = playersTokenCount[_address][currentSeason][1] +
-                playersTokenCount[_address][currentSeason][2] +
-                playersTokenCount[_address][currentSeason][3];
-            return count;
-        } else {
-            return playersTokenCount[_address][currentSeason][typ];
-        }
-    }
-
-    function approve(address _to, uint256 _tokenId) public returns (bool) {
-        /* It will approve the token to be transfer*/
-        address owner = ownerOf(_tokenId);
-        require(_to != owner);
-        require(msg.sender == owner);
-        //require(contractowner == owner);
-
-        approval[currentSeason][_tokenId] = _to;
-        return true;
-    }
-
-    function ownerOf(uint256 _tokenId) public view returns (address) {
-        /* Function to return the owneraddress of the token*/
-
-        address owner = tokenOwners[currentSeason][_tokenId];
-        require(owner != address(0));
-        return owner;
-    }
-
-    function transfer(address _to, uint256 _tokenId) public payable {
-        require(tokenOwners[currentSeason][_tokenId] == msg.sender);
-        address token_address = ownerOf(_tokenId);
-        uint256 token_type = player[token_address][currentSeason][_tokenId]
-            .cardtype;
-
-        tokenOwners[currentSeason][_tokenId] = _to;
-        player[_to][currentSeason][_tokenId].cardtype = player[msg
-            .sender][currentSeason][_tokenId]
-            .cardtype;
-        player[_to][currentSeason][_tokenId].value = player[msg
-            .sender][currentSeason][_tokenId]
-            .value;
-        playersTokenCount[_to][currentSeason][token_type] += 1;
-        playersTokenCount[msg.sender][currentSeason][token_type] -= 1;
-        for (
-            uint256 i = 0;
-            i < ownToken[msg.sender][currentSeason].length;
-            i++
-        ) {
-            if (ownToken[msg.sender][currentSeason][i] == _tokenId) {
-                ownToken[msg.sender][currentSeason][i] = 0;
-                break;
-            }
-        }
-        ownToken[_to][currentSeason].push(_tokenId);
-        delete (player[msg.sender][currentSeason][_tokenId]);
-    }
+interface NFT {
+    function ownerOf(uint256 _tokenId) external view returns (address);
 
     function safeTransferFrom(
         address _from,
         address _to,
         uint256 _tokenId
-    ) public payable {
-        /* Function is used for transferring the token and its ownership from contractowner in both caes when burn is call and when call from market place */
-        //require(tokenOwners[_tokenId] == _from);
-        require(approval[currentSeason][_tokenId] == msg.sender);
-        address token_address = ownerOf(_tokenId);
-        uint256 token_type = player[token_address][currentSeason][_tokenId]
-            .cardtype;
+    ) external payable;
 
-        tokenOwners[currentSeason][_tokenId] = _to;
-        player[_to][currentSeason][_tokenId]
-            .cardtype = player[_from][currentSeason][_tokenId].cardtype;
-        player[_to][currentSeason][_tokenId]
-            .value = player[_from][currentSeason][_tokenId].value;
-        playersTokenCount[_to][currentSeason][token_type] += 1;
-        playersTokenCount[_from][currentSeason][token_type] -= 1;
-        for (uint256 i = 0; i < ownToken[_from][currentSeason].length; i++) {
-            if (ownToken[_from][currentSeason][i] == _tokenId) {
-                ownToken[_from][currentSeason][i] = 0;
+    function tokenDetails(uint256 _tokenId)
+        external
+        view
+        returns (uint256, uint256);
+
+    function transfer(address, uint256) external payable;
+
+    function createToken(
+        address,
+        uint256,
+        uint256
+    ) external payable returns (uint256);
+}
+
+interface erc20 {
+    function transfer(address, uint256) external view returns (bool);
+
+    function balanceOf(address) external view returns (uint256);
+
+    function transferFrom(
+        address,
+        address,
+        uint256
+    ) external payable returns (bool);
+}
+
+contract MarketPlace {
+    erc20 public stars;
+
+    NFT public nft;
+
+    address public owner_address;
+
+    uint256[] tokenid_added;
+
+    uint256 public available_token_count;
+
+    uint256 public available_star_count;
+
+    mapping(uint256 => token_sell_information) public token_details;
+
+    struct token_sell_information {
+        bool is_available;
+        address buyer;
+        address seller;
+    }
+
+    mapping(uint256 => biddingInformation) public bidderDetails;
+
+    struct biddingInformation {
+        bool is_available;
+        address owner;
+        address bidder;
+        uint256 value;
+    }
+
+    address public __address;
+
+    uint256 totalPool;
+
+    mapping(address => uint256) mappedPool;
+
+    uint256 starsPrice;
+
+    uint256 tokenPrice;
+
+    modifier onlyOwner {
+        require(msg.sender == owner_address);
+        _;
+    }
+
+    constructor() public {
+        owner_address = msg.sender;
+    }
+
+    function setNftAddress(address _address) public onlyOwner {
+        //set NFT token contract address (ERC721)
+        nft = NFT(_address);
+    }
+
+    function setErc20Address(address ___address) public onlyOwner {
+        // set ERC20 address
+        stars = erc20(___address);
+    }
+
+    function setMarketContractAddress(address maketPlace) public {
+        // set market place address
+        __address = maketPlace;
+    }
+
+    function increaseStarSupply(uint256 value) public payable {
+        // only admin will call this function. function is responsible for increasing star count in market place
+        require(msg.sender == owner_address, "Only Admin Can Call");
+        stars.transferFrom(owner_address, __address, value);
+        available_star_count = available_star_count + value;
+        totalPool = totalPool + value;
+        mappedPool[__address] += value;
+    }
+
+    function decreaseStarSupply(uint256 value) public {
+        // only admin will call this function. function is responsible for decrease stars count in market place
+        require(msg.sender == owner_address, "Only Admin Can Call");
+        stars.transfer(owner_address, value);
+        available_star_count = available_star_count - value;
+        totalPool = totalPool - value;
+        mappedPool[__address] -= value;
+    }
+
+    function setStarsPrice(uint256 _price) public onlyOwner {
+        // this is rresponsible for setting the star price
+        starsPrice = _price;
+    }
+
+    function setNftPrice(uint256 _price) public onlyOwner {
+        // this is rresponsible for setting the nft price
+        tokenPrice = _price;
+    }
+
+    function showTotalPool() public view returns (uint256) {
+        // this will show the total pool size i.e stars available
+        return totalPool;
+    }
+
+    function buyStars(address _from, uint256 amount) public payable {
+        // this will be call by player who want to buy stars
+        require(amount <= mappedPool[_from]);
+        require(msg.value >= amount * starsPrice);
+        stars.transfer(msg.sender, amount);
+        totalPool = totalPool - amount;
+        if (amount == mappedPool[_from]) {
+            delete (mappedPool[_from]);
+        } else {
+            mappedPool[_from] -= amount;
+        }
+    }
+
+    function sellStar(uint256 count) public {
+        // sell star
+
+        require(stars.balanceOf(msg.sender) >= count);
+        //stars.transfer(__address,count);
+        mappedPool[msg.sender] += count;
+        totalPool = totalPool + count;
+    }
+
+    function increaseTokenSupply(uint256 cardType, uint256 value)
+        public
+        payable
+    {
+        require(msg.sender == owner_address, "Only Admin Can Call");
+        uint256 tokenid = nft.createToken(__address, cardType, value);
+        token_details[tokenid].is_available = true;
+        token_details[tokenid].buyer = address(0);
+        token_details[tokenid].seller = __address;
+        available_token_count++;
+    }
+
+    function decreaseTokenSupply(uint256 tokenId) public payable {
+        require(msg.sender == owner_address, "Only Admin Can Call");
+        nft.transfer(owner_address, tokenId);
+        available_token_count--;
+    }
+
+    function sellNFT(uint256 _tokenId) public {
+        //put tokenid for sell
+        require(nft.ownerOf(_tokenId) == msg.sender);
+        uint256 present = 0;
+        for (uint256 i = 0; i < tokenid_added.length; i++) {
+            if (tokenid_added[i] == _tokenId) {
+                present = 1;
                 break;
             }
         }
-        ownToken[_to][currentSeason].push(_tokenId);
-        delete (player[_from][currentSeason][_tokenId]);
+        if (present == 0) {
+            tokenid_added.push(_tokenId);
+        }
+        //transfer function should be called after this function
+
+        token_details[_tokenId].is_available = true;
+        token_details[_tokenId].seller = msg.sender;
+        token_details[_tokenId].buyer = address(0);
+        available_token_count++;
     }
 
-    function returnSeason() public view returns (uint256) {
-        return currentSeason;
+    function getBidStatus(uint256 tokenId) public view returns (bool) {
+        return bidderDetails[tokenId].is_available;
+    }
+
+    function buyNFT(uint256 _tokenId) public payable {
+        address owner;
+        owner = nft.ownerOf(_tokenId);
+        require(
+            owner == token_details[_tokenId].seller,
+            "The person does not owen this token"
+        ); //checks token owner is the seller of token
+        require(
+            bidderDetails[_tokenId].is_available != true,
+            "The token cannot be buy as it is avaiable for bidding"
+        );
+        uint256 token_type;
+        uint256 value;
+        (token_type, value) = nft.tokenDetails(_tokenId);
+        require(msg.value >= value); //check given value is greater or equal to token value
+        address seller;
+        seller = token_details[_tokenId].seller;
+        require(seller != address(0));
+        nft.transfer(msg.sender, _tokenId);
+        token_details[_tokenId].is_available = false;
+        token_details[_tokenId].buyer = msg.sender;
+        available_token_count--;
+    }
+
+    function showAvailableToken()
+        public
+        view
+        returns (uint256[] memory available)
+    {
+        // returns the array of token present in marketplace
+        uint256[] memory available_token_for_sell = new uint256[](
+            available_token_count
+        );
+        uint256 j;
+        for (uint256 i = 0; i < tokenid_added.length; i++) {
+            if (token_details[tokenid_added[i]].is_available == true) {
+                available_token_for_sell[j] = tokenid_added[i];
+                j++;
+            }
+        }
+        return available_token_for_sell;
+    }
+
+    function makeTokenAvailableForBidding(uint256 tokenId) public {
+        require(
+            nft.ownerOf(tokenId) == msg.sender,
+            "The token is not owned by the person"
+        );
+        bidderDetails[tokenId].is_available = true;
+        bidderDetails[tokenId].owner = nft.ownerOf(tokenId);
+        bidderDetails[tokenId].bidder = address(0);
+        bidderDetails[tokenId].value = 0;
+    }
+
+    function closeBidding(
+        uint256 tokenId,
+        address bidderAddress,
+        uint256 amountOfBidding
+    ) public {
+        address tokenOwner = nft.ownerOf(tokenId);
+        nft.transfer(tokenOwner, tokenId);
+        bidderDetails[tokenId].is_available = false;
+        bidderDetails[tokenId].owner = tokenOwner;
+        bidderDetails[tokenId].bidder = bidderAddress;
+        bidderDetails[tokenId].value = amountOfBidding;
     }
 }
